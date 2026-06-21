@@ -4,7 +4,7 @@ from app.api.products import router as product_router
 from app.api.auth import router as auth_router
 from app.api.user import router as user_router
 from app.api.cart import router as cart_router
-
+from prometheus_fastapi_instrumentator import Instrumentator
 from app.database.database import Base
 from app.database.database import engine
 
@@ -16,6 +16,7 @@ from app.models.cart import Cart
 app = FastAPI(
     title="AnantBuy API"
 )
+Instrumentator().instrument(app).expose(app)
 app.add_middleware(
     CORSMiddleware,
 

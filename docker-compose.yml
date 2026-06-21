@@ -1,22 +1,18 @@
+version: "3.9"
+
 services:
-  postgres:
-    image: postgres:16
-    container_name: anantbuy-postgres
-
-    environment:
-      POSTGRES_DB: anantbuy_db
-      POSTGRES_USER: anantbuy
-      POSTGRES_PASSWORD: AnantBuy123
-
+  frontend:
+    build: ./frontend
+    container_name: anantbuy-frontend
     ports:
-      - "5432:5432"
-
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "4000:3000"
+    depends_on:
+      - backend
+    networks:
+      - default
 
   backend:
-    build:
-      context: ./backend
+    build: ./backend
     container_name: anantbuy-api
     ports:
       - "9000:8000"
@@ -24,15 +20,29 @@ services:
       - ./backend/.env
     depends_on:
       - postgres
+    networks:
+      default:
+      anant-monitoring:
+        aliases:
+          - anantbuy-api
 
-  frontend:
-    build:
-      context: ./frontend
-    container_name: anantbuy-frontend
+  postgres:
+    image: postgres:16
+    container_name: anantbuy-postgres
+    environment:
+      POSTGRES_USER: anantbuy
+      POSTGRES_PASSWORD: AnantBuy123
+      POSTGRES_DB: anantbuy_db
     ports:
-      - "4000:3000"
-    depends_on:
-      - backend
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - default
 
 volumes:
   postgres_data:
+
+networks:
+  anant-monitoring:
+    name: anant-monitoring  
