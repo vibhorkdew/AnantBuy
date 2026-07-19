@@ -10,6 +10,7 @@ from app.database.database import engine
 
 # Import models
 from app.models.user import User
+
 from app.models.product import Product
 from app.models.cart import Cart
 
