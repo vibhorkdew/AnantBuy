@@ -5,10 +5,12 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /code
 
+# Copy requirements first (better caching)
 COPY app/requirements.txt /tmp/requirements.txt
 
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
+# Copy the application
 COPY app ./app
 
 EXPOSE 8000

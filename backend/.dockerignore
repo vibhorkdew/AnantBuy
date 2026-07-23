@@ -1,18 +1,15 @@
+venv/
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
+
+requirements.bak
+requirements_old.txt
 
 .git
 .gitignore
-Dockerfile
-.dockerignore
-
-venv/
-.env
-
 .vscode
 
 README.md
-tests/
-docs/
+
+.env
