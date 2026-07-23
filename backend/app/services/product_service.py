@@ -56,6 +56,9 @@ def update_product(
     product.price = product_data.price
     product.stock = product_data.stock
     product.category = product_data.category
+    product.brand = product_data.brand
+    product.image_url = product_data.image_url
+    product.rating = product_data.rating
 
     db.commit()
     db.refresh(product)

@@ -7,7 +7,45 @@ import {
   CardActions
 } from "@mui/material";
 
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import api from "../api/axios";
+
 function ProductCard({ product }) {
+
+  const { token } = useContext(AuthContext);
+  const [added, setAdded] = useState(false);
+
+  const handleAddToCart = async () => {
+
+    try {
+
+      await api.post(
+        "/api/cart/",
+        {
+          product_id: product.id,
+          quantity: 1
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setAdded(true);
+
+      alert("Product added to cart!");
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Failed to add product");
+
+    }
+
+  };
 
   return (
 
@@ -47,8 +85,13 @@ function ProductCard({ product }) {
         <Button
           variant="contained"
           fullWidth
+          onClick={handleAddToCart}
         >
-          Add To Cart
+          {
+            added
+              ? "Added ✓"
+              : "Add To Cart"
+          }
         </Button>
 
       </CardActions>

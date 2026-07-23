@@ -12,6 +12,8 @@ import Cart from "./pages/Cart";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import ReviewOrder from "./pages/ReviewOrder";
+
 function App() {
 
   const darkMode = true;
@@ -64,6 +66,11 @@ function App() {
                 <Cart />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+            path="/review"
+            element={<ReviewOrder />}
           />
 
         </Routes>

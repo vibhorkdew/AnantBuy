@@ -3,12 +3,14 @@ from sqlalchemy.orm import Session
 
 from app.database.dependencies import get_db
 from app.security.oauth2 import get_current_user
-from app.schemas.cart_schema import CartCreate
+
+from app.schemas.cart_schema import CartCreate, CartUpdate, CartResponse
 
 from app.services.cart_service import (
     add_to_cart,
     get_cart,
-    delete_cart_item
+    delete_cart_item,
+    update_cart_quantity
 )
 
 router = APIRouter(
@@ -32,7 +34,7 @@ def add_item(
     )
 
 
-@router.get("/")
+@router.get("/", response_model=list[CartResponse])
 def view_cart(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
@@ -44,13 +46,32 @@ def view_cart(
     )
 
 
+
 @router.delete("/{cart_id}")
 def remove_item(
     cart_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
 ):
 
     return delete_cart_item(
         db,
+        current_user["user_id"],
         cart_id
+    )
+
+
+@router.put("/{cart_id}")
+def update_quantity(
+    cart_id: int,
+    cart: CartUpdate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+
+    return update_cart_quantity(
+        db,
+        current_user["user_id"],
+        cart_id,
+        cart.quantity
     )

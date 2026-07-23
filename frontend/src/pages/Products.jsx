@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../api/axios";
+import { AuthContext } from "../context/AuthContext";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 function Products() {
 
@@ -14,6 +17,14 @@ function Products() {
 
   const [loading, setLoading] =
     useState(true);
+
+  const [addedProductId, setAddedProductId] =
+    useState(null);
+
+  const { token } = useContext(AuthContext);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
 
@@ -64,6 +75,43 @@ function Products() {
       }
     };
 
+  const handleAddToCart = async (product) => {
+
+    try {
+
+      await api.post(
+        "/api/cart/",
+        {
+          product_id: product.id,
+          quantity: 1
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setSnackbarMessage(`${product.name} added to cart`);
+      setOpenSnackbar(true);
+
+      setAddedProductId(product.id);
+
+      setTimeout(() => {
+
+        setAddedProductId(null);
+
+      }, 3000);
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert("Failed to add product");
+
+    }
+
+  };
   return (
 
     <div
@@ -288,20 +336,29 @@ function Products() {
                       marginTop: "20px"
                     }}
                   >
-
+          
                     <button
+                      onClick={() => handleAddToCart(product)}
                       style={{
                         flex: 1,
                         padding: "12px",
                         border: "none",
                         borderRadius: "10px",
+
                         background:
-                          "#f59e0b",
+                          addedProductId === product.id
+                            ? "#22c55e"
+                            : "#f59e0b",
+
                         color: "white",
                         cursor: "pointer"
                       }}
                     >
-                      Add To Cart
+                      {
+                        addedProductId === product.id
+                          ? "✓ Added"
+                          : "Add To Cart"
+                      }
                     </button>
 
                     <button
@@ -333,7 +390,25 @@ function Products() {
         </div>
 
       )}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2500}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right"
+        }}
+      >
 
+        <Alert
+          severity="success"
+          variant="filled"
+          onClose={() => setOpenSnackbar(false)}
+        >
+          {snackbarMessage}
+        </Alert>
+
+      </Snackbar>
     </div>
 
   );
