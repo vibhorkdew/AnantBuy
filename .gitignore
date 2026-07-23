@@ -10,8 +10,16 @@ dist/
 # Docker
 *.log
 
+# Environment
+.env
+.env.*
+!.env.example
+
 # VS Code
 .vscode/
+
+# Git
+.git
 
 # OS
 .DS_Store

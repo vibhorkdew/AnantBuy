@@ -1,3 +1,16 @@
+# Dependency directories
+node_modules/
+
+# Production builds
+dist/
+dist-ssr/
+
+# Local environment variables (Keep your API keys secret)
+.env
+.env.local
+.env.*.local
+*.local
+
 # Logs
 logs
 *.log
@@ -7,18 +20,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# System files
 .DS_Store
+Thumbs.db
+
+# IDEs and Editors
+.idea
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Share VS Code extensions, but ignore local user settings
+.vscode/*
+!.vscode/extensions.json
