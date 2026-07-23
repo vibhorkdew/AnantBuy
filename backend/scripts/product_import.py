@@ -14,7 +14,11 @@ sys.path.append(
 from app.database.database import SessionLocal
 from app.models.product import Product
 
+
 db = SessionLocal()
+if db.query(Product).count() > 0:
+    print("Products already exist.")
+    exit()
 
 response = requests.get(
     "https://dummyjson.com/products?limit=100"

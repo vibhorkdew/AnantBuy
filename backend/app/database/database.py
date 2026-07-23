@@ -1,10 +1,32 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import declarative_base
+# from sqlalchemy import create_engine
+# from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.orm import declarative_base
 
-DATABASE_URL = (
+# DATABASE_URL = (
+#     "postgresql://anantbuy:AnantBuy123@postgres:5432/anantbuy_db"
+# )
+# engine = create_engine(DATABASE_URL)
+
+# SessionLocal = sessionmaker(
+#     autocommit=False,
+#     autoflush=False,
+#     bind=engine
+# )
+
+# Base = declarative_base()
+
+
+
+import os
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
+
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
     "postgresql://anantbuy:AnantBuy123@postgres:5432/anantbuy_db"
 )
+
 engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(
