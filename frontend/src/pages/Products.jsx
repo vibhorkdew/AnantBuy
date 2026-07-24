@@ -9,9 +9,6 @@ function Products() {
   const [products, setProducts] =
     useState([]);
 
-  const [filteredProducts, setFilteredProducts] =
-    useState([]);
-
   const [search, setSearch] =
     useState("");
 
@@ -26,54 +23,36 @@ function Products() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const filteredProducts =
+    products.filter((product) =>
+      product.name
+        .toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+    );
+
   useEffect(() => {
 
-    fetchProducts();
+    api.get(
+      "/api/products/"
+    ).then((res) => {
+
+      console.log("API DATA:", res.data);
+
+      setProducts(res.data);
+
+    }).catch((err) => {
+
+      console.error(err);
+
+    }).finally(() => {
+
+      setLoading(false);
+
+    });
 
   }, []);
-
-  useEffect(() => {
-
-    const result =
-      products.filter((product) =>
-        product.name
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          )
-      );
-
-    setFilteredProducts(result);
-
-  }, [search, products]);
-
-  const fetchProducts =
-    async () => {
-
-      try {
-
-        const res =
-          await api.get(
-            "/api/products/"
-          );
-
-        console.log("API DATA:", res.data);
-
-        setProducts(res.data);
-
-        setFilteredProducts(
-          res.data
-        );
-
-      } catch (err) {
-
-        console.error(err);
-
-      } finally {
-
-        setLoading(false);
-      }
-    };
 
   const handleAddToCart = async (product) => {
 
