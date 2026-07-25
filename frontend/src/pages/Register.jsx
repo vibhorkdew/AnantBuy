@@ -20,7 +20,7 @@ function Register() {
     try {
 
       await api.post(
-        "/api/auth/register",
+        "auth/register",
         form
       );
 

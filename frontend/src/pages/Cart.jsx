@@ -17,7 +17,7 @@ function Cart() {
 
     try {
 
-      const response = await api.get("/api/cart");
+      const response = await api.get("/cart/");
 
       setCart(response.data);
 
@@ -78,7 +78,7 @@ function Cart() {
     try{
 
       await api.put(
-        `/api/cart/${id}`,
+        `/cart/${id}`,
         {
           quantity
         }
@@ -102,7 +102,7 @@ function Cart() {
     try{
 
       await api.delete(
-        `/api/cart/${id}`
+        `/cart/${id}`
       );
 
       setSelectedItems(

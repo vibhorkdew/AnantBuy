@@ -4,19 +4,40 @@ import subprocess
 import time
 import requests
 import sys
+import shutil as sh
 
+# -----------------------------
+# Ensure Docker is Installed
+# -----------------------------
+idef is_docker_ready():
+    if not shutil.which("docker"):
+        return False
+    # Check if docker compose plugin is available
+    result = subprocess.run(["docker", "compose", "version"], capture_output=True)
+    return result.returncode == 0
+
+if not is_docker_ready():
+    print("Docker or Docker Compose not found. Running external installation script...")
+    install_result = subprocess.run([sys.executable, "install_docker_crossplatform.py"])
+    if install_result.returncode != 0:
+        print("Docker installation failed.", file=sys.stderr)
+        sys.exit(1)
+else:
+    print("✓ Docker and Docker Compose are already installed.")
 # -----------------------------
 # Create .env if missing
 # -----------------------------
 if not os.path.exists(".env"):
-    shutil.copy(".env.example", ".env")
-    print("✓ Created .env")
+    if os.path.exists(".env.example"):
+        shutil.copy(".env.example", ".env")
+        print("✓ Created .env")
+    else:
+        print("Warning: .env.example not found, skipping .env creation.")
 
 # -----------------------------
 # Start Docker
 # -----------------------------
 print("Starting Docker containers...")
-
 try:
     subprocess.run(
         ["docker", "compose", "up", "--build", "-d"],
@@ -24,17 +45,16 @@ try:
     )
 except subprocess.CalledProcessError:
     print("\nFailed to start Docker.")
-    print("Make sure Docker Desktop is running and required ports are free.")
+    print("Make sure Docker daemon / Docker Desktop is running and required ports are free.")
     sys.exit(1)
 
 # -----------------------------
 # Wait for backend
 # -----------------------------
 print("Waiting for backend...")
-
 backend_url = "http://localhost:9000/docs"
 
-for _ in range(30):          # wait up to 60 seconds
+for _ in range(30):  # wait up to 60 seconds
     try:
         r = requests.get(backend_url, timeout=2)
         if r.status_code == 200:
@@ -53,7 +73,6 @@ else:
 # Import demo products
 # -----------------------------
 print("Importing demo products...")
-
 subprocess.run([
     "docker",
     "compose",
