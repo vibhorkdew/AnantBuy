@@ -13,7 +13,7 @@ function Cart() {
   }, []);
 
 
-  const loadCart = async () => {
+  async function loadCart() {
 
     try {
 
@@ -27,7 +27,7 @@ function Cart() {
 
     }
 
-  };
+  }
 
 
   const toggleOrder = (id) => {
@@ -132,19 +132,6 @@ function Cart() {
     item => selectedItems.includes(item.id)
   );
 
-
-  const selectedTotal = selectedProducts.reduce(
-    (sum, item) =>
-      sum + (item.product.price * item.quantity),
-    0
-  );
-
-
-  const selectedQuantity = selectedProducts.reduce(
-    (sum, item) =>
-      sum + item.quantity,
-    0
-  );
 
   const buttonStyle = {
 
