@@ -35,7 +35,7 @@ function Products() {
   useEffect(() => {
 
     api.get(
-      "/api/products/"
+      "/products/"
     ).then((res) => {
 
       console.log("API DATA:", res.data);
@@ -59,7 +59,7 @@ function Products() {
     try {
 
       await api.post(
-        "/api/cart/",
+        "/cart/",
         {
           product_id: product.id,
           quantity: 1
