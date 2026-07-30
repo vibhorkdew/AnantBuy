@@ -111,7 +111,7 @@ jobs:
           push: false
           tags: anantbuy-frontend:latest
       - name: Scan Backend Image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: anantbuy-backend:latest
           format: table
@@ -119,7 +119,7 @@ jobs:
           severity: HIGH,CRITICAL
           exit-code: "0"
       - name: Scan Frontend Image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: anantbuy-frontend:latest
           format: table
