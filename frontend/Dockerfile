@@ -1,4 +1,3 @@
-# ---------- Build ----------
 FROM node:20 AS builder
 
 WORKDIR /app

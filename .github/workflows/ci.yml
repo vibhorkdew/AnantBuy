@@ -12,85 +12,103 @@ permissions:
   contents: read
   packages: write
 
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/${{ github.repository_owner }}/anantbuy-backend
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/anantbuy-frontend
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      # ----------------------------
+      # ==================================================
       # Checkout
-      # ----------------------------
-      - name: Checkout repository
+      # ==================================================
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # ----------------------------
+      # ==================================================
       # Backend Validation
-      # ----------------------------
-      - name: Set up Python 3.11
+      # ==================================================
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
-          cache-dependency-path: backend/app/requirements.txt
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
 
-      - name: Install backend dependencies
+      - name: Install Backend Dependencies
         working-directory: backend
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r app/requirements.txt
+          pip install -r requirements.txt
 
-      - name: Verify FastAPI application import
+      - name: Validate FastAPI Application
         working-directory: backend
-        run: python -c "from app.main import app; print('Backend Loaded Successfully')"
+        run: |
+          python -c "from app.main import app; print('Backend Loaded Successfully')"
 
-      # ----------------------------
+      # ==================================================
       # Frontend Validation
-      # ----------------------------
-      - name: Set up Node.js 20
+      # ==================================================
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "22"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Install frontend dependencies
+      - name: Install Frontend Dependencies
         working-directory: frontend
         run: npm ci
 
-      - name: Build React application
-        working-directory: frontend
-        run: npm run build
-
-      - name: Lint frontend
+      - name: Lint Frontend
         working-directory: frontend
         run: npm run lint
 
-      # ----------------------------
-      # Docker Build
-      # ----------------------------
-      - name: Set up Docker Buildx
+      - name: Build React Application
+        working-directory: frontend
+        run: npm run build
+
+      # ==================================================
+      # Docker Buildx
+      # ==================================================
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # ----------------------------
-      # Docker Push
-      # ----------------------------
-      - name: Log in to GitHub Container Registry
+      # ==================================================
+      # Login to GHCR
+      # ==================================================
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push backend image
+      # ==================================================
+      # Build & Push Backend
+      # ==================================================
+      - name: Build and Push Backend Image
         uses: docker/build-push-action@v6
         with:
           context: ./backend
+          file: ./backend/Dockerfile
           push: true
-          tags: ghcr.io/vibhorkdew/anantbuy-backend:latest
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:latest
+            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
 
-      - name: Build and push frontend image
+      # ==================================================
+      # Build & Push Frontend
+      # ==================================================
+      - name: Build and Push Frontend Image
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
-          tags: ghcr.io/vibhorkdew/anantbuy-frontend:latest
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:latest
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
