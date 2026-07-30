@@ -34,18 +34,14 @@ function Products() {
 
   useEffect(() => {
 
-    api.get(
-      "/api/products/"
-    ).then((res) => {
-
-      console.log("API DATA:", res.data);
+    api.get("/api/products/").then((res) => {
 
       setProducts(res.data);
 
     }).catch((err) => {
 
       console.error(err);
-
+      alert("Failed to add products");
     }).finally(() => {
 
       setLoading(false);
@@ -82,13 +78,13 @@ function Products() {
 
       }, 3000);
 
-    } catch (err) {
-
-      console.error(err);
-
-      alert("Failed to add product");
-
+    }catch (err) {
+   if (import.meta.env.DEV) {
+     console.error("Failed to add product.", err);
     }
+
+    alert("Failed to add product");
+  }
 
   };
   return (
