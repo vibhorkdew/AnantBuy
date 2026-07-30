@@ -32,61 +32,49 @@ function Products() {
         )
     );
 
-  useEffect(() => {
-
-    api.get("/api/products/").then((res) => {
-
-      setProducts(res.data);
-
-    }).catch((err) => {
-
-      console.error(err);
-      alert("Failed to add products");
-    }).finally(() => {
-
-      setLoading(false);
-
-    });
-
-  }, []);
-
-  const handleAddToCart = async (product) => {
-
+useEffect(() => {
+  const loadProducts = async () => {
     try {
-
-      await api.post(
-        "/cart/",
-        {
-          product_id: product.id,
-          quantity: 1
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      setSnackbarMessage(`${product.name} added to cart`);
-      setOpenSnackbar(true);
-
-      setAddedProductId(product.id);
-
-      setTimeout(() => {
-
-        setAddedProductId(null);
-
-      }, 3000);
-
-    }catch (err) {
-   if (import.meta.env.DEV) {
-     console.error("Failed to add product.", err);
+      const res = await api.get("/api/products/");
+      setProducts(res.data);
+    } catch {
+      console.error("Failed to load products.");
+    } finally {
+      setLoading(false);
     }
+  };
 
+  loadProducts();
+}, []);
+
+const handleAddToCart = async (product) => {
+  try {
+    await api.post(
+      "/api/cart/",
+      {
+        product_id: product.id,
+        quantity: 1,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setSnackbarMessage(`${product.name} added to cart`);
+    setOpenSnackbar(true);
+
+    setAddedProductId(product.id);
+
+    setTimeout(() => {
+      setAddedProductId(null);
+    }, 3000);
+  } catch {
+    console.error("Failed to add product.");
     alert("Failed to add product");
   }
-
-  };
+};
   return (
 
     <div
