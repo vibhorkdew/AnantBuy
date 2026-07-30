@@ -90,7 +90,50 @@ jobs:
       # ==================================================
       # Build & Push Backend
       # ==================================================
-      - name: Build and Push Backend Image
+      - name: Build Backend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          load: true
+          push: false
+          tags: anantbuy-backend:latest
+
+      # ==================================================
+      # Build & Push Frontend
+      # ==================================================
+      - name: Build Frontend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          load: true
+          push: false
+          tags: anantbuy-frontend:latest
+      - name: Scan Backend Image
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: anantbuy-backend:latest
+          format: table
+          output: trivy-backend.txt
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+      - name: Scan Frontend Image
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: anantbuy-frontend:latest
+          format: table
+          output: trivy-frontend.txt
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+      - name: Upload Trivy Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-reports
+          path: |
+            trivy-backend.txt
+            trivy-frontend.txt
+      - name: Push Backend Image
         uses: docker/build-push-action@v6
         with:
           context: ./backend
@@ -99,11 +142,7 @@ jobs:
           tags: |
             ${{ env.BACKEND_IMAGE }}:latest
             ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
-
-      # ==================================================
-      # Build & Push Frontend
-      # ==================================================
-      - name: Build and Push Frontend Image
+      - name: Push Frontend Image
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
