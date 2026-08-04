@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+
+  backend:
+    image: ghcr.io/vibhorkdew/anantbuy-backend:latest
+    env_file:
+      - ./backend/.env
+
+    ports:
+      - "9000:8000"
+
+    networks:
+      - anant-overlay
+
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == ip-10-0-1-86
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    image: ghcr.io/vibhorkdew/anantbuy-frontend:latest
+
+    ports:
+      - "4000:80"
+
+    networks:
+      - anant-overlay
+
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == ip-10-0-1-86
+      restart_policy:
+        condition: on-failure
+
+networks:
+  anant-overlay:
+    external: true
