@@ -4,39 +4,77 @@ services:
 
   backend:
     image: ghcr.io/vibhorkdew/anantbuy-backend:latest
+
     env_file:
       - ./backend/.env
 
     ports:
-      - "9000:8000"
+      - target: 8000
+        published: 9000
+        protocol: tcp
+        mode: ingress
 
     networks:
       - anant-overlay
 
     deploy:
+      mode: replicated
       replicas: 1
+
       placement:
         constraints:
           - node.hostname == ip-10-0-1-86
+
       restart_policy:
         condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+
+      rollback_config:
+        parallelism: 1
+        order: stop-first
 
   frontend:
     image: ghcr.io/vibhorkdew/anantbuy-frontend:latest
 
     ports:
-      - "4000:80"
+      - target: 80
+        published: 4000
+        protocol: tcp
+        mode: ingress
+
+    depends_on:
+      - backend
 
     networks:
       - anant-overlay
 
     deploy:
+      mode: replicated
       replicas: 1
+
       placement:
         constraints:
           - node.hostname == ip-10-0-1-86
+
       restart_policy:
         condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+
+      rollback_config:
+        parallelism: 1
+        order: stop-first
 
 networks:
   anant-overlay:
