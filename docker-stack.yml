@@ -60,7 +60,7 @@ services:
 
       placement:
         constraints:
-          - node.hostname == ip-10-0-1-86
+          - node.hostname == ip-10-0-1-192
 
       restart_policy:
         condition: on-failure
