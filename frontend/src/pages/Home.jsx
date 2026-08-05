@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
+import "@fontsource/orbitron/700.css";
+import "@fontsource/orbitron/800.css";
 
 function Home() {
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ function Home() {
         minHeight: "100vh"
       }}
     >
-      {/* HERO */}
+      {/* HERO SECTION */}
       <Box
         sx={{
           minHeight: "85vh",
@@ -66,25 +68,39 @@ function Home() {
         }}
       >
         <Box sx={{ maxWidth: "600px" }}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontFamily: "'Orbitron', sans-serif",
-              fontWeight: 800,
-              lineHeight: 1.1,
-              fontSize: {
-                xs: "3rem",
-                md: "4.4rem"
-              },
-              mb: 2
-            }}
-          >
-            <span style={{ color: "#38bdf8" }}>AnantBuy</span>
-            <br />
-            <span style={{ color: "white" }}>
-              Enterprise Shopping Platform
-            </span>
-          </Typography>
+          <Box sx={{ mb: 2 }}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontFamily: "Orbitron",
+                fontWeight: 700,
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                textShadow: "0 0 20px rgba(56,189,248,.35)",
+                color: "#29b6f6",
+                lineHeight: 1.1,
+                fontSize: {
+                  xs: "3.2rem",
+                  md: "5.2rem"
+                }
+              }}
+            >
+              ANANTBUY
+            </Typography>
+            <Typography
+              sx={{
+                mt: 1,
+                fontFamily: "Orbitron",
+                fontSize: { xs: "2rem", md: "4rem" },
+                fontWeight: 700,
+                color: "#ffffff",
+                letterSpacing: "1px",
+                lineHeight: 1.2
+              }}
+            >
+              Enterprise Commerce Platform
+            </Typography>
+          </Box>
 
           <Typography
             variant="h5"
@@ -93,7 +109,7 @@ function Home() {
               mb: 4
             }}
           >
-            Secure, scalable and containerized e-commerce platform powered by AnantX DevSecOps.
+            Enterprise-grade E-Commerce application secured, monitored and deployed using the AnantX DevSecOps Platform.
           </Typography>
 
           <Button
@@ -101,9 +117,14 @@ function Home() {
             size="large"
             sx={{
               mr: 2,
-              background: "#f59e0b",
+              px: 4,
+              py: 1.5,
+              borderRadius: "12px",
+              fontWeight: 700,
+              textTransform: "none",
+              background: "linear-gradient(90deg,#29b6f6,#0288d1)",
               "&:hover": {
-                background: "#d97706"
+                background: "linear-gradient(90deg,#0288d1,#0277bd)"
               }
             }}
             onClick={() => navigate("/products")}
@@ -115,11 +136,16 @@ function Home() {
             variant="outlined"
             size="large"
             sx={{
-              color: "#f59e0b",
-              borderColor: "#f59e0b",
+              px: 4,
+              py: 1.5,
+              borderRadius: "12px",
+              fontWeight: 700,
+              textTransform: "none",
+              border: "1px solid #29b6f6",
+              color: "#29b6f6",
               "&:hover": {
-                background: "#f59e0b",
-                color: "#fff"
+                background: "rgba(41,182,246,0.1)",
+                borderColor: "#29b6f6"
               }
             }}
             onClick={() => navigate("/register")}
@@ -154,7 +180,8 @@ function Home() {
               <Typography
                 variant="h3"
                 sx={{
-                  color: "#f59e0b",
+                  fontFamily: "Orbitron",
+                  color: "#29b6f6",
                   fontWeight: 700
                 }}
               >
@@ -167,7 +194,8 @@ function Home() {
               <Typography
                 variant="h3"
                 sx={{
-                  color: "#f59e0b",
+                  fontFamily: "Orbitron",
+                  color: "#29b6f6",
                   fontWeight: 700
                 }}
               >
@@ -180,7 +208,8 @@ function Home() {
               <Typography
                 variant="h3"
                 sx={{
-                  color: "#f59e0b",
+                  fontFamily: "Orbitron",
+                  color: "#29b6f6",
                   fontWeight: 700
                 }}
               >
@@ -191,33 +220,60 @@ function Home() {
           </Box>
         </Box>
 
+        {/* HERO IMAGE CONTAINER WITH BADGE */}
         <Box
-          component="img"
-          src="https://images.pexels.com/photos/5650026/pexels-photo-5650026.jpeg?auto=compress&cs=tinysrgb&w=900"
           sx={{
-            width: {
-              xs: "100%",
-              md: "580px"
-            },
-            height: {
-              md: "420px"
-            },
-            objectFit: "cover",
-            borderRadius: "30px",
-            ml: {
-              md: 6
-            },
+            position: "relative",
             mt: {
               xs: 6,
               md: 0
             },
-            transition: "0.3s",
-            "&:hover": {
-              transform: "scale(1.02)"
-            },
-            boxShadow: "0 30px 60px rgba(0,0,0,.45)"
+            ml: {
+              md: 6
+            }
           }}
-        />
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: 20,
+              left: 20,
+              background: "#0f172a",
+              color: "#29b6f6",
+              px: 2,
+              py: 1,
+              borderRadius: "20px",
+              border: "1px solid #29b6f6",
+              zIndex: 2,
+              fontFamily: "Orbitron",
+              fontSize: "0.8rem",
+              fontWeight: 700
+            }}
+          >
+            Powered by AnantX
+          </Box>
+          <Box
+            component="img"
+            src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200"
+            sx={{
+              width: {
+                xs: "100%",
+                md: "580px"
+              },
+              height: {
+                md: "420px"
+              },
+              objectFit: "cover",
+              borderRadius: "30px",
+              border: "1px solid rgba(41,182,246,.25)",
+              boxShadow: "0 0 40px rgba(41,182,246,.18)",
+              transition: "0.3s",
+              "&:hover": {
+                transform: "scale(1.02)"
+              }
+            }}
+          />
+        </Box>
       </Box>
 
       {/* CATEGORIES */}
@@ -226,8 +282,8 @@ function Home() {
           variant="h3"
           align="center"
           sx={{
-            fontFamily: "'Orbitron', sans-serif",
-            color: "#38bdf8",
+            fontFamily: "Orbitron",
+            color: "#29b6f6",
             fontWeight: 700,
             mb: 6
           }}
@@ -248,7 +304,7 @@ function Home() {
                   transition: ".4s",
                   "&:hover": {
                     transform: "translateY(-10px) scale(1.02)",
-                    boxShadow: "0 20px 40px rgba(56,189,248,.25)"
+                    boxShadow: "0 20px 40px rgba(41,182,246,.25)"
                   }
                 }}
               >
@@ -269,6 +325,7 @@ function Home() {
                   <Typography
                     variant="h5"
                     sx={{
+                      fontFamily: "Orbitron",
                       color: "white",
                       fontWeight: 700
                     }}
@@ -288,8 +345,8 @@ function Home() {
           variant="h3"
           align="center"
           sx={{
-            fontFamily: "'Orbitron', sans-serif",
-            color: "#38bdf8",
+            fontFamily: "Orbitron",
+            color: "#29b6f6",
             fontWeight: 700,
             mb: 6
           }}
@@ -309,7 +366,7 @@ function Home() {
                   cursor: "pointer",
                   "&:hover": {
                     transform: "translateY(-10px) scale(1.02)",
-                    boxShadow: "0 20px 40px rgba(56,189,248,.25)"
+                    boxShadow: "0 20px 40px rgba(41,182,246,.25)"
                   }
                 }}
               >
@@ -361,8 +418,8 @@ function Home() {
       >
         <Typography
           sx={{
-            fontFamily: "'Orbitron', sans-serif",
-            color: "#38bdf8",
+            fontFamily: "Orbitron",
+            color: "#29b6f6",
             fontWeight: 700
           }}
         >
