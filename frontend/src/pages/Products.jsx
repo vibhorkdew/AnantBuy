@@ -35,7 +35,7 @@ function Products() {
 useEffect(() => {
   const loadProducts = async () => {
     try {
-      const res = await api.get("/api/products/");
+      const res = await api.get("/products/");
       setProducts(res.data);
     } catch {
       console.error("Failed to load products.");
@@ -50,7 +50,7 @@ useEffect(() => {
 const handleAddToCart = async (product) => {
   try {
     await api.post(
-      "/api/cart/",
+      "/cart/",
       {
         product_id: product.id,
         quantity: 1,

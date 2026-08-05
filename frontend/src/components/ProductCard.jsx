@@ -21,7 +21,7 @@ function ProductCard({ product }) {
     try {
 
       await api.post(
-        "/api/cart/",
+        "/cart/",
         {
           product_id: product.id,
           quantity: 1
