@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
   pull_request:
     branches:
       - main
@@ -22,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       # ==================================================
       # Checkout
       # ==================================================
@@ -88,7 +90,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # ==================================================
-      # Build & Push Backend
+      # Build Backend Image
       # ==================================================
       - name: Build Backend Image
         uses: docker/build-push-action@v6
@@ -100,7 +102,7 @@ jobs:
           tags: anantbuy-backend:latest
 
       # ==================================================
-      # Build & Push Frontend
+      # Build Frontend Image
       # ==================================================
       - name: Build Frontend Image
         uses: docker/build-push-action@v6
@@ -110,6 +112,10 @@ jobs:
           load: true
           push: false
           tags: anantbuy-frontend:latest
+
+      # ==================================================
+      # Trivy Security Scan
+      # ==================================================
       - name: Scan Backend Image
         uses: aquasecurity/trivy-action@master
         with:
@@ -118,6 +124,7 @@ jobs:
           output: trivy-backend.txt
           severity: HIGH,CRITICAL
           exit-code: "0"
+
       - name: Scan Frontend Image
         uses: aquasecurity/trivy-action@master
         with:
@@ -126,6 +133,10 @@ jobs:
           output: trivy-frontend.txt
           severity: HIGH,CRITICAL
           exit-code: "0"
+
+      # ==================================================
+      # Upload Trivy Reports
+      # ==================================================
       - name: Upload Trivy Reports
         uses: actions/upload-artifact@v4
         with:
@@ -133,6 +144,10 @@ jobs:
           path: |
             trivy-backend.txt
             trivy-frontend.txt
+
+      # ==================================================
+      # Push Backend Image
+      # ==================================================
       - name: Push Backend Image
         uses: docker/build-push-action@v6
         with:
@@ -142,6 +157,10 @@ jobs:
           tags: |
             ${{ env.BACKEND_IMAGE }}:latest
             ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+
+      # ==================================================
+      # Push Frontend Image
+      # ==================================================
       - name: Push Frontend Image
         uses: docker/build-push-action@v6
         with:
@@ -151,3 +170,14 @@ jobs:
           tags: |
             ${{ env.FRONTEND_IMAGE }}:latest
             ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+
+      # ==================================================
+      # Trigger AnantX Deployment
+      # ==================================================
+      - name: Trigger AnantX Deployment
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.ANANTX_DEPLOY_TOKEN }}" \
+            https://api.github.com/repos/vibhorkdew/AnantX/dispatches \
+            -d '{"event_type":"anantbuy-updated"}'
